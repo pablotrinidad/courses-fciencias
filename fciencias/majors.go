@@ -1,5 +1,3 @@
-// Package fciencias contains the functions used to parse the majors UNAM's
-// Faculty of Science run.
 package fciencias
 
 import (
@@ -10,26 +8,11 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/pablotrinidad/courses-fciencias/crawler"
 )
 
-// Major offered in the faculty
-type Major struct {
-	ID            int
-	Name          string
-	AcademicPlans []AcademicPlan
-}
+const pageURL = "http://www.fciencias.unam.mx/licenciatura/Index"
 
-// AcademicPlan that a major have
-type AcademicPlan struct {
-	ID         int
-	ExternalID int
-	Name       string
-	Year       int
-}
-
-// GetMajors return all majors listed in the website.
-func GetMajors() []Major {
+func FetchMajors() []Major {
 	var majors []Major
 
 	// Match content inside parenthesis
@@ -37,7 +20,7 @@ func GetMajors() []Major {
 	planYearRegex := regexp.MustCompile(`(\d+)`)
 
 	// Fetch main index document
-	indexDoc := crawler.GetDocument("docencia/horarios/indice")
+	indexDoc := GetDocument("docencia/horarios/indice")
 
 	planID := 0
 

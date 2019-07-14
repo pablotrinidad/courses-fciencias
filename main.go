@@ -1,34 +1,53 @@
-// Course FCiencias.
-// A web crawler made to download and store UNAM's Faculty of Science
-// available courses schedules.
+// Courses F. Ciencias
+// This project fetches all available course schedules from UNAM's
+// faculty of science website.
 
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
-	"github.com/pablotrinidad/courses-fciencias/fciencias"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
+
+	"github.com/pablotrinidad/courses-fciencias/api/crawler"
 )
 
-func main() {
-	http.HandleFunc("/", indexHandler)
+// Routes return an HTTP chi router
+func Routes() *chi.Mux {
+	router := chi.NewRouter()
+	router.Use(
+		// Set Content-Type headers as application/json
+		render.SetContentType(render.ContentTypeJSON),
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("Defaulting to port %s", port)
-	}
+		// Log API request calls
+		middleware.Logger,
 
-	log.Printf("Listening on port %s", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
+		// Redirect slashes to no slush URL versions
+		middleware.RedirectSlashes,
+
+		// Recover from panics without crashing server
+		middleware.Recoverer,
+	)
+
+	router.Route("/api/v1", func(r chi.Router) {
+		r.Mount("/crawler", crawler.Routes())
+	})
+	return router
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	majors := fciencias.GetMajors()
-	data, _ := json.MarshalIndent(majors, "", "    ")
-	fmt.Fprintf(w, "%s\n", data)
+func main() {
+	router := Routes()
+
+	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+		log.Printf("%s %s\n", method, route) // Walk and print out all routes
+		return nil
+	}
+	if err := chi.Walk(router, walkFunc); err != nil {
+		log.Panicf("Logging err %s\n", err.Error()) // Panic if there's an error
+	}
+
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
