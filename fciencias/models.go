@@ -11,12 +11,11 @@ type baseModel struct {
 // A Major offered in the faculty
 type Major struct {
 	baseModel
-	Name          string         `json:"name"`
-	AcademicPlans []AcademicPlan `json:"academic_plans"`
+	Name string `json:"name"`
 }
 
-// An AcademicPlan that a major have
-type AcademicPlan struct {
+// An AcademicProgram that a major have
+type AcademicProgram struct {
 	baseModel
 	Name string `json:"name"`
 	Year int    `json:"year"`

@@ -1,67 +1,36 @@
 package fciencias
 
 import (
-	"log"
-	"net/url"
 	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-const pageURL = "http://www.fciencias.unam.mx/licenciatura/Index"
+const pageURL = "licenciatura/Index"
 
+var digitsRe = regexp.MustCompile(`(\d+)`)
+
+// FetchMajors return a Major slice with the content of the listing webpage
 func FetchMajors() []Major {
 	var majors []Major
+	document := GetDocument(pageURL)
 
-	// Match content inside parenthesis
-	planNameRegex := regexp.MustCompile(`\([^)]+\)`)
-	planYearRegex := regexp.MustCompile(`(\d+)`)
+	rawMajors := document.Find("#info-contenido ul li a")
+	rawMajors.Each(func(i int, m *goquery.Selection) {
 
-	// Fetch main index document
-	indexDoc := GetDocument("docencia/horarios/indice")
+		// Avoid last major since its information is not complete
+		if i == rawMajors.Length()-1 {
+			return
+		}
 
-	planID := 0
-
-	// Obtain careers and their academic plans
-	indexDoc.Find("#info-contenido h2").Each(func(i int, s *goquery.Selection) {
-		// Degree name
 		var major Major
-		major.Name = s.Text()
 		major.ID = i + 1
+		major.Name = m.Text()
 
-		// Academic plans
-		s.Next().Find("a").Each(func(j int, t *goquery.Selection) {
-
-			// Crate new academic plan
-			planID++
-			var academicPlan AcademicPlan
-			academicPlan.ID = planID
-
-			// Parse academic plan name
-			APName := planNameRegex.FindString(t.Text())
-			APName = strings.Title(APName[1 : len(APName)-1])
-			academicPlan.Name = APName
-
-			// Parse plan year
-			APYear := planYearRegex.FindString(APName)
-			academicPlan.Year, _ = strconv.Atoi(APYear)
-
-			// Obtain plan ID from URL
-			ref, _ := t.Attr("href")
-			planURL, err := url.Parse(ref)
-			if err != nil {
-				log.Fatal(err)
-			}
-			urlComponents := strings.Split(planURL.Path, "/")
-			academicPlanID, err := strconv.Atoi(urlComponents[len(urlComponents)-1])
-			academicPlan.ExternalID = academicPlanID
-			if err != nil {
-				log.Fatal(err)
-			}
-			major.AcademicPlans = append(major.AcademicPlans, academicPlan)
-		})
+		// External ID
+		href, _ := m.Attr("href")
+		major.ExternalID, _ = strconv.Atoi(digitsRe.FindString(href))
 
 		majors = append(majors, major)
 	})
