@@ -1,10 +1,13 @@
 package fciencias
 
 import (
+	"context"
 	"regexp"
 	"strconv"
 
+	"cloud.google.com/go/datastore"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/pablotrinidad/courses-fciencias/storage"
 )
 
 const pageURL = "licenciatura/Index"
@@ -19,13 +22,12 @@ func FetchMajors() []Major {
 	rawMajors := document.Find("#info-contenido ul li a")
 	rawMajors.Each(func(i int, m *goquery.Selection) {
 
-		// Avoid last major since its information is not complete
-		if i == rawMajors.Length()-1 {
+		// Avoid last 2 majors since its information is not complete
+		if i == rawMajors.Length()-2 {
 			return
 		}
 
 		var major Major
-		major.ID = i + 1
 		major.Name = m.Text()
 
 		// External ID
@@ -35,5 +37,19 @@ func FetchMajors() []Major {
 		majors = append(majors, major)
 	})
 
+	updateOnDatastore(&majors)
+
 	return majors
+}
+
+func updateOnDatastore(majors *[]Major) {
+	client := storage.NewDatastoreClient()
+	ctx := context.Background()
+	for _, major := range *majors {
+		q := datastore.NewQuery("Major").Filter("external_id =", major.ExternalID)
+		if c, _ := client.Count(ctx, q); c == 0 {
+			client.Put(ctx, datastore.IncompleteKey("Major", nil), &major)
+		}
+	}
+
 }
