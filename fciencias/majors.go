@@ -37,7 +37,7 @@ func FetchMajors() []Major {
 		majors = append(majors, major)
 	})
 
-	updateOnDatastore(&majors)
+	go updateOnDatastore(&majors)
 
 	return majors
 }
