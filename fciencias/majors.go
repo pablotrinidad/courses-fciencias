@@ -4,6 +4,7 @@ import (
 	"context"
 	"regexp"
 	"strconv"
+	"time"
 
 	"cloud.google.com/go/datastore"
 	"github.com/PuerkitoBio/goquery"
@@ -48,6 +49,7 @@ func updateOnDatastore(majors *[]Major) {
 	for _, major := range *majors {
 		q := datastore.NewQuery("Major").Filter("external_id =", major.ExternalID)
 		if c, _ := client.Count(ctx, q); c == 0 {
+			major.CreatedAt = time.Now()
 			client.Put(ctx, datastore.IncompleteKey("Major", nil), &major)
 		}
 	}

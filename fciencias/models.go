@@ -2,12 +2,17 @@
 
 package fciencias
 
-import "cloud.google.com/go/datastore"
+import (
+	"time"
+
+	"cloud.google.com/go/datastore"
+)
 
 // baseModel contain fields present in every struct
 type baseEntity struct {
 	ID         *datastore.Key `json:"-" datastore:"__key__"`
 	ExternalID int            `json:"id" datastore:"external_id"`
+	CreatedAt  time.Time      `json:"created_at" datastore:"created_at"`
 }
 
 // A Major offered in the faculty
