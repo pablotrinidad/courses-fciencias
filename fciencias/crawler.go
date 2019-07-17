@@ -1,5 +1,6 @@
-// Package crawler contains utility functions for fetching and parsing web pages
-package crawler
+// This file contain global utilities to perform bot request to the Faculty's website
+
+package fciencias
 
 import (
 	"log"
