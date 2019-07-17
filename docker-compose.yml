@@ -1,0 +1,25 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+
+services:
+  fciencias:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: fciencias_local
+    depends_on:
+      - fciencias_db
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    ports:
+      - "5000:5000"
+
+  fciencias_db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env

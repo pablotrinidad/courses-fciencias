@@ -49,5 +49,5 @@ func main() {
 		log.Panicf("Logging err %s\n", err.Error()) // Panic if there's an error
 	}
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":5000", router))
 }

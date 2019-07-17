@@ -11,9 +11,15 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-Visual Studio Code
+# Visual Studio Code
 .vscode/
 tempCodeRunnerFile.go
 
 # Built files
 main
+
+# macOS
+.DS_Store
+
+# Env
+.env

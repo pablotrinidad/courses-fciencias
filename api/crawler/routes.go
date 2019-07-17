@@ -10,7 +10,7 @@ import (
 func Routes() *chi.Mux {
 	router := chi.NewRouter()
 
-	router.Get("/majors", GetAllMajorsHandler)
+	router.Get("/fetch", FetchAllDataHandler)
 
 	return router
 }

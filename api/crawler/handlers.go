@@ -10,7 +10,7 @@ import (
 )
 
 // GetAllMajorsHandler return all majors
-func GetAllMajorsHandler(w http.ResponseWriter, r *http.Request) {
-	majors := fciencias.FetchMajors()
+func FetchAllDataHandler(w http.ResponseWriter, r *http.Request) {
+	majors := fciencias.FetchAllData()
 	render.JSON(w, r, majors)
 }
