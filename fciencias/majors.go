@@ -40,6 +40,7 @@ func FetchMajors() []models.Major {
 	return majors
 }
 
+// updateMajors perform a create or update operation using the major's external ID
 func updateMajors(majors *[]models.Major) {
 	db := models.GetDB()
 	for _, major := range *majors {
