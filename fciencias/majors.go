@@ -5,13 +5,14 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/pablotrinidad/courses-fciencias/models"
 )
 
 const pageURL = "licenciatura/Index"
 
 // FetchMajors return a Major slice with the content of the listing webpage
-func FetchMajors() []Major {
-	var majors []Major
+func FetchMajors() []models.Major {
+	var majors []models.Major
 	document := GetDocument(pageURL)
 
 	digitsRe := regexp.MustCompile(`(\d+)`)
@@ -24,7 +25,7 @@ func FetchMajors() []Major {
 			return
 		}
 
-		var major Major
+		var major models.Major
 		major.Name = m.Text()
 
 		// External ID
@@ -34,5 +35,20 @@ func FetchMajors() []Major {
 		majors = append(majors, major)
 	})
 
+	updateMajors(&majors)
+
 	return majors
+}
+
+// updateMajors perform a create or update operation using the major's external ID
+func updateMajors(majors *[]models.Major) {
+	db := models.GetDB()
+	for _, major := range *majors {
+		db.Where(&models.Major{ExternalID: major.ExternalID}).Select("id").First(&major)
+		if major.ID == 0 {
+			db.Create(&major)
+		} else {
+			db.Save(&major)
+		}
+	}
 }
