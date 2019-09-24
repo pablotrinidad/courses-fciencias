@@ -1,30 +1,21 @@
-// This file contain global utilities to perform bot request to the Faculty's website
-
-package fciencias
+package crawler
 
 import (
+	"github.com/PuerkitoBio/goquery"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 const (
-	// BaseURL is the main website path from where all pages will be downloaded
-	BaseURL = "http://www.fciencias.unam.mx"
-
-	// HTTPUserAgent is the string sent in the User-Agent header on every request
-	HTTPUserAgent = "SchedulesCrawlerBot v1.0 https://github.com/pablotrinidad/courses-fciencias/ | Download course schedules public on the website."
+	BaseURL       = "http://www.fciencias.unam.mx"
+	HTTPUserAgent = "CoursesCrawlerBot v.1.0 https://github.com/pablotrinidad/courses-fciencias | Download courses catalog"
 )
 
-var httpClient = &http.Client{
-	Timeout: 2 * time.Second,
-}
+var httpClient = &http.Client{Timeout: 2 * time.Second}
 
 // GetDocument fetches the given path and return a goquery Document with its content
 func GetDocument(url string) *goquery.Document {
-	url = BaseURL + "/" + url
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)

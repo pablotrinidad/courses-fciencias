@@ -23,3 +23,7 @@ main
 
 # Env
 .env
+
+# JetBrains
+.idea/
+http-requests/
