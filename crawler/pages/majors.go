@@ -20,7 +20,7 @@ func FetchMajor(id int) entities.Major {
 	return major
 }
 
-// FetchAllMajors concurrently
+// FetchAllMajors concurrently. It uses the FetchMajor function.
 func FetchAllMajors() []*entities.Major {
 	var wg sync.WaitGroup
 	cn := make(chan *entities.Major, len(entities.Majors))
