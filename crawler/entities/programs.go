@@ -2,6 +2,7 @@ package entities
 
 import (
 	"fmt"
+
 	"github.com/pablotrinidad/courses-fciencias/crawler"
 )
 
@@ -23,7 +24,7 @@ func init() {
 type Program struct {
 	BaseEntity
 	Major int    `json:"major"`
-	Name  string `json:"name"`
+	Name  string `	json:"name"`
 	Year  int    `json:"year"`
 }
 

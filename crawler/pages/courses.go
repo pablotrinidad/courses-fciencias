@@ -1,8 +1,6 @@
 package pages
 
 import (
-	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,9 +11,10 @@ import (
 	"github.com/pablotrinidad/courses-fciencias/crawler/entities"
 )
 
-func FetchProgramCourses(program *entities.Program) (data []*entities.ProgramCourse) {
+// FetchProgramCourses receives a program pointer whit a non-zero ExternalID value and parses
+// all the courses shown in its presentation website. Returns an slice of ProgramCourses
+func FetchProgramCourses(program *entities.Program) (courses []*entities.ProgramCourse) {
 	document := crawler.GetDocument(program.GetURL())
-	log.Println(program.GetURL())
 
 	parenthesisRegex := regexp.MustCompile(`\(([^\)]+)\)`)
 	digitRegex := regexp.MustCompile(`\d+`)
@@ -34,11 +33,9 @@ func FetchProgramCourses(program *entities.Program) (data []*entities.ProgramCou
 		switch {
 		case s.Is("h3"):
 			semester++
-			fmt.Printf("%d (%s)\n", semester, s.Text())
 		case s.Is("h2") && i > 0:
 			mandatory = false
 			semester = -1
-			fmt.Println("OPTATIVAS")
 		case s.Is("p") && s.Find("a").Length() != 0:
 			rawText := strings.TrimSpace(s.Text())
 			creditsLocation, cutIndex := courseNameRegex.FindStringIndex(rawText), len(rawText)
@@ -58,6 +55,7 @@ func FetchProgramCourses(program *entities.Program) (data []*entities.ProgramCou
 				Syllabus:   "",
 				Mandatory:  mandatory,
 			}
+			course.Syllabus = course.GetURL()
 
 			courseURL, ok := s.Find("a").First().Attr("href")
 			if ok {
@@ -65,17 +63,18 @@ func FetchProgramCourses(program *entities.Program) (data []*entities.ProgramCou
 				course.ExternalID, _ = strconv.Atoi(seps[len(seps)-1])
 			}
 
-			fmt.Printf("\t%d) %s - %d credits\n", course.ExternalID, course.Name, course.Credits)
+			courses = append(courses, &course)
 		}
 	})
 
-	return data
+	return courses
 }
 
-// FetchMajorCourses
-func FetchMajorCourses(major int) (map[int][]*entities.ProgramCourse, map[int]*entities.Program) {
-	courses := make(map[int][]*entities.ProgramCourse)
-	programs := make(map[int]*entities.Program)
+// FetchMajorCourses concurrently. Given a Major ID it will iterate over every valid program ID and fetch
+// the courses found in that program. Only one request is made per program.
+func FetchMajorCourses(major int) (courses map[int][]*entities.ProgramCourse, programs map[int]*entities.Program) {
+	courses = make(map[int][]*entities.ProgramCourse)
+	programs = make(map[int]*entities.Program)
 
 	var wg sync.WaitGroup
 	cn := make(chan *entities.ProgramCourse)
@@ -94,7 +93,6 @@ func FetchMajorCourses(major int) (map[int][]*entities.ProgramCourse, map[int]*e
 				cn <- course
 			}
 		}(programID, cn, programs[programID])
-		break
 	}
 
 	go func() {

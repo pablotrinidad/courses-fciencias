@@ -1,5 +1,11 @@
 package entities
 
+import (
+	"fmt"
+
+	"github.com/pablotrinidad/courses-fciencias/crawler"
+)
+
 const CoursesURL = "http://www.fciencias.unam.mx/licenciatura/asignaturas/"
 
 type Course struct {
@@ -15,4 +21,9 @@ type ProgramCourse struct {
 	Credits   int    `json:"credits"`
 	Syllabus  string `json:"syllabus"`
 	Mandatory bool   `json:"mandatory"`
+}
+
+// GetURL returns the website URL of the program course
+func (c *ProgramCourse) GetURL() string {
+	return fmt.Sprintf("%s/%s/%d/%d", crawler.BaseURL, CoursesURL, c.Program, c.ExternalID)
 }

@@ -1,10 +1,11 @@
 package pages
 
 import (
-	"github.com/pablotrinidad/courses-fciencias/crawler"
-	"github.com/pablotrinidad/courses-fciencias/crawler/entities"
 	"strings"
 	"sync"
+
+	"github.com/pablotrinidad/courses-fciencias/crawler"
+	"github.com/pablotrinidad/courses-fciencias/crawler/entities"
 )
 
 // FetchMajor download a major's website and parse the input
@@ -20,7 +21,7 @@ func FetchMajor(id int) entities.Major {
 	return major
 }
 
-// FetchAllMajors concurrently. It uses the FetchMajor function.
+// FetchAllMajors concurrently. It uses the FetchMajor function to fetch individual majors.
 func FetchAllMajors() []*entities.Major {
 	var wg sync.WaitGroup
 	cn := make(chan *entities.Major, len(entities.Majors))
@@ -37,10 +38,9 @@ func FetchAllMajors() []*entities.Major {
 	wg.Wait()
 	close(cn)
 
-	majors, i := make([]*entities.Major, len(entities.Majors)), 0
+	majors := make([]*entities.Major, 0, len(entities.Majors))
 	for major := range cn {
-		majors[i] = major
-		i++
+		majors = append(majors, major)
 	}
 
 	return majors
