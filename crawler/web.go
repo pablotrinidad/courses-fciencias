@@ -1,10 +1,11 @@
 package crawler
 
 import (
-	"github.com/PuerkitoBio/goquery"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 const (
@@ -14,7 +15,7 @@ const (
 
 var httpClient = &http.Client{Timeout: 2 * time.Second}
 
-// GetDocument fetches the given path and return a goquery Document with its content
+// GetDocument fetches the given URL and return the corresponding goquery Document
 func GetDocument(url string) *goquery.Document {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {

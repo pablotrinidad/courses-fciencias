@@ -10,7 +10,8 @@ const CoursesURL = "http://www.fciencias.unam.mx/licenciatura/asignaturas/"
 
 type Course struct {
 	BaseEntity
-	Name string `json:"name"`
+	Name     string     `json:"name"`
+	Programs []*Program `json:"programs"`
 }
 
 type ProgramCourse struct {
