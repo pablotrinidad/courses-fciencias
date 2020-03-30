@@ -7,7 +7,11 @@ import "server/crawler/resources.proto";
 option go_package = "github.com/pablotrinidad/fciencias/server/crawler";
 
 service FCCrawler {
+  // Majors
   rpc ListMajors(ListMajorsRequest) returns (ListMajorsResponse);
+
+  // List programs
+  rpc ListPrograms(ListProgramsRequest) returns (ListProgramsResponse);
 }
 
 message ListMajorsRequest {}
@@ -15,4 +19,15 @@ message ListMajorsRequest {}
 message ListMajorsResponse {
   repeated Major majors = 1;
   uint32 count = 2;
+}
+
+message ListProgramsRequest {}
+
+message ListProgramsResponse {
+  message MajorBreakdown {
+    Major major = 1;
+    repeated Program programs = 2;
+  }
+  repeated MajorBreakdown majors = 1;
+  uint32  count = 2;
 }

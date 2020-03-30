@@ -70,7 +70,7 @@ func FetchProgramCourses(program *entities.Program) (courses []*entities.Program
 	return courses
 }
 
-// FetchMajorCourses concurrently. Given a Major ID it will iterate over every valid program ID and fetch
+// FetchMajorCourses concurrently. Given a major ID it will iterate over every valid program ID and fetch
 // the courses found in that program. Only one request is made per program.
 func FetchMajorCourses(major int) (courses map[int][]*entities.ProgramCourse, programs map[int]*entities.Program) {
 	courses = make(map[int][]*entities.ProgramCourse)

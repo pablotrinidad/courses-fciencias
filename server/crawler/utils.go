@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
-
-var httpClient = &http.Client{Timeout: 2 * time.Second}
 
 // callConcurrent perform fns concurrently.
 func callConcurrent(fns []func()) {
@@ -27,6 +24,7 @@ func callConcurrent(fns []func()) {
 
 // getDocument fetches the given URL and return the corresponding goquery Document
 func getDocument(url string) (*goquery.Document, error) {
+	httpClient := &http.Client{Timeout: requestTimeout}
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create new HTTP request; %v", err)

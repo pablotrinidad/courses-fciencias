@@ -9,3 +9,11 @@ message Major {
   string name = 2;
   string url = 3;
 }
+
+message Program {
+  string id = 1;
+  string major = 2;
+  string name = 3;
+  uint32 year = 4;
+  string url = 5;
+}

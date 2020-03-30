@@ -23,3 +23,25 @@ func (m *major) toProto() *Major {
 		Url:  m.getURL(),
 	}
 }
+
+type program struct {
+	externalID int
+	major      int
+	name       string
+	year       int
+}
+
+// getURL of the program's main page
+func (p *program) getURL() string {
+	return fmt.Sprintf("%s/%s/%d/%d", baseURL, programsURL, p.major, p.externalID)
+}
+
+// toProto returns the protobuf representation of the program
+func (p *program) toProto() *Program {
+	return &Program{
+		Id:   strconv.Itoa(p.externalID),
+		Name: p.name,
+		Year: uint32(p.year),
+		Url:  p.getURL(),
+	}
+}
