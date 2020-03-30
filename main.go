@@ -4,6 +4,8 @@ import (
 	"log"
 	"net"
 
+	"fciencias/crawler"
+
 	"google.golang.org/grpc"
 )
 
@@ -15,7 +17,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	cs.RegisterFCCrawlerServer(s, cs.NewFCCrawlerServiceImpl())
+	crawler.RegisterFCCrawlerServer(s, crawler.NewFCCrawlerServiceImpl())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
