@@ -3,7 +3,6 @@ package crawler
 
 import (
 	"context"
-	"fmt"
 
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -41,7 +40,6 @@ func (*FCCrawlerServiceImpl) ListMajors(ctx context.Context, req *ListMajorsRequ
 	resp.Majors = make([]*Major, 0, len(majorsList))
 
 	for r := range cn {
-		fmt.Println("HOLA")
 		if r.err != nil {
 			return nil, status.Errorf(codes.Internal, "an error occurred processing major %d", r.m.externalID)
 		}

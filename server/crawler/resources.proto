@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package crawler;
 
-option go_package = "github.com/pablotrinidad/fciencias/crawler";
+option go_package = "github.com/pablotrinidad/fciencias/server/crawler";
 
 message Major {
   string id = 1;

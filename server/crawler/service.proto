@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package crawler;
 
-import "crawler/resources.proto";
+import "server/crawler/resources.proto";
 
-option go_package = "github.com/pablotrinidad/fciencias/crawler";
+option go_package = "github.com/pablotrinidad/fciencias/server/crawler";
 
 service FCCrawler {
   rpc ListMajors(ListMajorsRequest) returns (ListMajorsResponse);
