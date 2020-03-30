@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package crawler;
+
+option go_package = "github.com/pablotrinidad/fciencias/crawler";
+
+message Major {
+  string id = 1;
+  string name = 2;
+  string url = 3;
+}

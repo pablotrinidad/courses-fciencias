@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package crawler;
+
+import "crawler/resources.proto";
+
+option go_package = "github.com/pablotrinidad/fciencias/crawler";
+
+service FCCrawler {
+  rpc ListMajors(ListMajorsRequest) returns (ListMajorsResponse);
+}
+
+message ListMajorsRequest {}
+
+message ListMajorsResponse {
+  repeated Major majors = 1;
+  uint32 count = 2;
+}
