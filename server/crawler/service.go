@@ -25,15 +25,15 @@ func (*FCCrawlerServiceImpl) ListMajors(ctx context.Context, req *ListMajorsRequ
 	}
 
 	cn := make(chan *fetchMajorResult, len(majorsList))
-	fns := make([]func(), 0, len(majorsList))
-	for majorID, _ := range majorsList {
-		fn := func() {
+	fns := make([]func(), len(majorsList))
+	for i, _ := range majorsList {
+		majorID := majorsList[i]
+		fns[i] = func() {
 			major, err := fetchMajor(majorID)
 			cn <- &fetchMajorResult{m: major, err: err}
 		}
-		fns = append(fns, fn)
 	}
-	callConcurrent(fns...)
+	callConcurrent(fns)
 	close(cn)
 
 	resp := &ListMajorsResponse{}

@@ -12,13 +12,14 @@ import (
 var httpClient = &http.Client{Timeout: 2 * time.Second}
 
 // callConcurrent perform fns concurrently.
-func callConcurrent(fns ...func()) {
+func callConcurrent(fns []func()) {
 	var wg sync.WaitGroup
-	for _, fn := range fns {
+	for i, _ := range fns {
+		f := fns[i]
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			fn()
+			f()
 		}()
 	}
 	wg.Wait()

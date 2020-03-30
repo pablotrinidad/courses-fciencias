@@ -1,6 +1,9 @@
 package crawler
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 type major struct {
 	externalID int
@@ -15,7 +18,7 @@ func (m *major) getURL() string {
 // toProto returns the protobuf representation of the major
 func (m *major) toProto() *Major {
 	return &Major{
-		Id:   string(m.externalID),
+		Id:   strconv.Itoa(m.externalID),
 		Name: m.name,
 		Url:  m.getURL(),
 	}

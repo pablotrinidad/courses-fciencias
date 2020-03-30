@@ -7,6 +7,7 @@ import (
 
 // fetchMajor download a major's website and parse the input
 func fetchMajor(id int) (*major, error) {
+	fmt.Printf("pages: %d\n", id)
 	major := &major{}
 	major.externalID = id
 	document, err := getDocument(major.getURL())
