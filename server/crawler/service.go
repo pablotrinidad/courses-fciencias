@@ -71,10 +71,12 @@ func fetchProgramsConcurrently() (map[int][]*program, error) {
 	cn := make(chan *fetchProgramResult)
 	fns := make([]func(), 0)
 	for mID, ps := range programs {
-		for _, pID := range ps {
+		for i := range ps {
+			pID := ps[i]
+			m := mID
 			f := func() {
-				p, err := fetchProgram(pID)
-				cn <- &fetchProgramResult{majorID: mID, p: p, err: err}
+				p, err := fetchProgram(m, pID)
+				cn <- &fetchProgramResult{majorID: m, p: p, err: err}
 			}
 			fns = append(fns, f)
 		}
@@ -87,7 +89,7 @@ func fetchProgramsConcurrently() (map[int][]*program, error) {
 	programs := make(map[int][]*program)
 	for r := range cn {
 		if r.err != nil {
-			return nil, fmt.Errorf("an error occurred processing program; %v", r.err)
+			return nil, r.err
 		}
 		programs[r.majorID] = append(programs[r.majorID], r.p)
 	}
@@ -103,13 +105,11 @@ func (*FCCrawlerServiceImpl) ListPrograms(context.Context, *ListProgramsRequest)
 		return nil, status.Errorf(codes.Internal, "%v", err)
 
 	}
-	fmt.Println("Got majors")
 
 	programs, err := fetchProgramsConcurrently()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%v", err)
 	}
-	fmt.Println("Got programs")
 
 	resp := &ListProgramsResponse{}
 	resp.Majors = make([]*ListProgramsResponse_MajorBreakdown, len(majors))
@@ -121,6 +121,7 @@ func (*FCCrawlerServiceImpl) ListPrograms(context.Context, *ListProgramsRequest)
 			p := mPrograms[j]
 			mb.Programs = append(mb.Programs, p.toProto())
 		}
+		resp.Majors[i] = mb
 	}
-	return nil, nil
+	return resp, nil
 }

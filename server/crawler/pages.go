@@ -21,11 +21,11 @@ func fetchMajor(id int) (*major, error) {
 }
 
 // fetchProgram downloads a major's website and returns a populated program
-func fetchProgram(id int) (*program, error) {
-	p := &program{externalID: id}
+func fetchProgram(majorID, programID int) (*program, error) {
+	p := &program{externalID: programID, major: majorID}
 	document, err := getDocument(p.getURL())
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch program %d; %v", id, err)
+		return nil, fmt.Errorf("failed to fetch program %d at URL %s; %v", programID, p.getURL(), err)
 	}
 	parenthesisRegex := regexp.MustCompile(`\(([^\)]+)\)`)
 	digitRegex := regexp.MustCompile(`\d+`)
@@ -34,7 +34,7 @@ func fetchProgram(id int) (*program, error) {
 	p.name = strings.Title(programRawName[1 : len(programRawName)-1])
 	p.year, err = strconv.Atoi(digitRegex.FindString(p.name))
 	if err != nil {
-		return nil, fmt.Errorf("failed parsing program year for program %d; %v", id, err)
+		return nil, fmt.Errorf("failed parsing program year for program %d; %v", programID, err)
 	}
 	return p, nil
 }

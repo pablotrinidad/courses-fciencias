@@ -38,7 +38,7 @@ func getDocument(url string) (*goquery.Document, error) {
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-		return nil, fmt.Errorf("got failed success code %d", response.StatusCode)
+		return nil, fmt.Errorf("HTTP status code %d", response.StatusCode)
 	}
 
 	document, err := goquery.NewDocumentFromReader(response.Body)
