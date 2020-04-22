@@ -70,10 +70,8 @@ func fetchProgramsConcurrently() (map[int][]*program, error) {
 	}
 	cn := make(chan *fetchProgramResult)
 	fns := make([]func(), 0)
-	for m, ps := range programs {
-		mID := m
-		for i, _ := range ps {
-			pID := ps[i]
+	for mID, ps := range programs {
+		for _, pID := range ps {
 			f := func() {
 				p, err := fetchProgram(pID)
 				cn <- &fetchProgramResult{majorID: mID, p: p, err: err}
@@ -81,15 +79,15 @@ func fetchProgramsConcurrently() (map[int][]*program, error) {
 			fns = append(fns, f)
 		}
 	}
-	fmt.Printf("calling %d functions\n", len(fns))
-	callConcurrent(fns)
-	fmt.Println("FINISHED COMPADRE")
-	close(cn)
+	go func() {
+		callConcurrent(fns)
+		close(cn)
+	}()
 
 	programs := make(map[int][]*program)
 	for r := range cn {
 		if r.err != nil {
-			return nil, fmt.Errorf("an error occurred processing program %d", r.p.externalID)
+			return nil, fmt.Errorf("an error occurred processing program; %v", r.err)
 		}
 		programs[r.majorID] = append(programs[r.majorID], r.p)
 	}
