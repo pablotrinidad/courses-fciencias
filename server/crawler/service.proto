@@ -2,32 +2,65 @@ syntax = "proto3";
 
 package crawler;
 
-import "server/crawler/resources.proto";
-
 option go_package = "github.com/pablotrinidad/fciencias/server/crawler";
 
+// FCCrawler services exposes majors, programs, courses, schedules and other information listed in
+// UNAM's Faculty of Science official website (www.fciencias.unam.mx). Data listing is possible
+// thanks to web scrapping and such the service is intended for collection and storage, not for
+// continuous queries.
 service FCCrawler {
-  // Majors
+  // ListMajors returns all majors offered in the faculty.
   rpc ListMajors(ListMajorsRequest) returns (ListMajorsResponse);
 
-  // List programs
+  // ListPrograms lists the different offerings every major has.
   rpc ListPrograms(ListProgramsRequest) returns (ListProgramsResponse);
 }
 
+// Major represents a Bachelor's degree offered at the Faculty, f.e: Computer Science, Physics, etc.
+message Major {
+  // Unique identifier used across the official website.
+  string id = 1;
+  // Major's official name.
+  string name = 2;
+  // Official website URL.
+  string url = 3;
+}
+
+// Program represents an official set of courses agreed upon to be imparted for a given major.
+// Usually defined by the year the program was made official, f.e: Computer Science 2013.
+message Program {
+  // Unique identifier used across the official website.
+  string id = 1;
+  // Program's major unique identifier
+  string major = 2;
+  // Program's official name
+  string name = 3;
+  // The year officially used to identify the program
+  uint32 year = 4;
+  // Official website URL.
+  string url = 5;
+}
+
+// ListMajorsRequest is the request sent to FCCrawler.ListMajors.
 message ListMajorsRequest {}
 
+// ListMajorsResponse is the response returned by FCCrawler.ListMajors after a successful request.
 message ListMajorsResponse {
   repeated Major majors = 1;
+  // The total amount of majors offered by the faculty.
   uint32 count = 2;
 }
 
+// ListProgramsRequest is the request sent to FCCrawler.ListPrograms.
 message ListProgramsRequest {}
 
+// ListProgramsResponse is the response returned by FCCrawler.ListMajors after a successful request.
 message ListProgramsResponse {
   message MajorBreakdown {
     Major major = 1;
     repeated Program programs = 2;
   }
   repeated MajorBreakdown majors = 1;
+  // The total amount of programs offered by the faculty.
   uint32  count = 2;
 }
