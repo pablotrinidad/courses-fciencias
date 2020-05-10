@@ -27,3 +27,6 @@ main
 # JetBrains
 .idea/
 http-requests/
+
+# Build files
+bin/

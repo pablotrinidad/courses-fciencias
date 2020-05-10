@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package crawler;
+package service;
 
-option go_package = "github.com/pablotrinidad/fciencias/server/crawler";
+option go_package = "github.com/pablotrinidad/fciencias/crawler/service";
 
 // FCCrawler services exposes majors, programs, courses, schedules and other information listed in
 // UNAM's Faculty of Science official website (www.fciencias.unam.mx). Data listing is possible

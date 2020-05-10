@@ -1,5 +1,5 @@
-// package crawler exposes the gRPC implementation of service FCCrawler.
-package crawler
+// package service exposes the gRPC implementation of service FCCrawler.
+package service
 
 import (
 	"context"

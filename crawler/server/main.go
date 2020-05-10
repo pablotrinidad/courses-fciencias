@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"server/crawler"
+	"crawler/service"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -19,7 +19,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	reflection.Register(s)
-	crawler.RegisterFCCrawlerServer(s, crawler.NewFCCrawlerServiceImpl())
+	service.RegisterFCCrawlerServer(s, service.NewFCCrawlerServiceImpl())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
