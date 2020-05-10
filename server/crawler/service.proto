@@ -14,12 +14,15 @@ service FCCrawler {
 
   // ListPrograms lists the different offerings every major has.
   rpc ListPrograms(ListProgramsRequest) returns (ListProgramsResponse);
+
+  // ListProgramCourses lists all courses offered in a program.
+  rpc ListProgramCourses(ListProgramCoursesRequest) returns (ListProgramCoursesResponse);
 }
 
 // Major represents a Bachelor's degree offered at the Faculty, f.e: Computer Science, Physics, etc.
 message Major {
   // Unique identifier used across the official website.
-  string id = 1;
+  uint32 id = 1;
   // Major's official name.
   string name = 2;
   // Official website URL.
@@ -30,21 +33,39 @@ message Major {
 // Usually defined by the year the program was made official, f.e: Computer Science 2013.
 message Program {
   // Unique identifier used across the official website.
-  string id = 1;
-  // Program's major unique identifier
-  string major = 2;
-  // Program's official name
+  uint32 id = 1;
+  // Program's major unique identifier.
+  uint32 major = 2;
+  // Program's official name.
   string name = 3;
-  // The year officially used to identify the program
+  // The year officially used to identify the program.
   uint32 year = 4;
   // Official website URL.
   string url = 5;
 }
 
+// Course represents a course offered in at the Faculty, f.e: Automata theory.
+message Course {
+  // Unique identifier used across the official website.
+  uint32 id = 1;
+  // Course's official name.
+  string name = 2;
+  // Semester where the course is taught within a major's program.
+  uint32 semester = 3;
+  // Determine whether a course is mandatory or elective within a major's program.
+  bool mandatory = 4;
+  // Credits the major's program attributed to the course.
+  uint32 credits = 5;
+  // The course's syllabus URL.
+  string syllabus = 6;
+  // Official website URL.
+  string url = 7;
+}
+
 // ListMajorsRequest is the request sent to FCCrawler.ListMajors.
 message ListMajorsRequest {}
 
-// ListMajorsResponse is the response returned by FCCrawler.ListMajors after a successful request.
+// ListMajorsResponse is the response returned by FCCrawler.ListMajors.
 message ListMajorsResponse {
   repeated Major majors = 1;
   // The total amount of majors offered by the faculty.
@@ -54,7 +75,7 @@ message ListMajorsResponse {
 // ListProgramsRequest is the request sent to FCCrawler.ListPrograms.
 message ListProgramsRequest {}
 
-// ListProgramsResponse is the response returned by FCCrawler.ListMajors after a successful request.
+// ListProgramsResponse is the response returned by FCCrawler.ListMajors.
 message ListProgramsResponse {
   message MajorBreakdown {
     Major major = 1;
@@ -63,4 +84,18 @@ message ListProgramsResponse {
   repeated MajorBreakdown majors = 1;
   // The total amount of programs offered by the faculty.
   uint32  count = 2;
+}
+
+// ListProgramCoursesRequest is the request sent to FCC.ListProgramCourses
+message ListProgramCoursesRequest {
+  uint32 major = 1;
+  uint32 program = 2;
+}
+
+// ListProgramCoursesResponse is the response returned by FCC.ListProgramCourses
+message ListProgramCoursesResponse {
+  Program program = 1;
+  repeated Course courses = 2;
+  // The total amount of courses offered in the major's program.
+  uint32 count = 3;
 }

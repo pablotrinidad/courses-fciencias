@@ -2,7 +2,6 @@ package crawler
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type major struct {
@@ -18,7 +17,7 @@ func (m *major) getURL() string {
 // toProto returns the protobuf representation of the major
 func (m *major) toProto() *Major {
 	return &Major{
-		Id:   strconv.Itoa(m.externalID),
+		Id:   uint32(m.externalID),
 		Name: m.name,
 		Url:  m.getURL(),
 	}
@@ -39,9 +38,37 @@ func (p *program) getURL() string {
 // toProto returns the protobuf representation of the program
 func (p *program) toProto() *Program {
 	return &Program{
-		Id:   strconv.Itoa(p.externalID),
+		Id:   uint32(p.externalID),
 		Name: p.name,
 		Year: uint32(p.year),
 		Url:  p.getURL(),
+	}
+}
+
+type course struct {
+	externalID  int
+	program     int
+	name        string
+	semester    uint
+	mandatory   bool
+	credits     uint
+	syllabusURL string
+}
+
+// getURL of the course's main page
+func (c *course) getURL() string {
+	return fmt.Sprintf("%s/%s/%d/%d", baseURL, coursesURL, c.program, c.externalID)
+}
+
+// toProto returns the protobuf representation of the course
+func (c *course) toProto() *Course {
+	return &Course{
+		Id:        uint32(c.externalID),
+		Name:      c.name,
+		Semester:  uint32(c.semester),
+		Mandatory: c.mandatory,
+		Credits:   uint32(c.credits),
+		Syllabus:  c.syllabusURL,
+		Url:       c.getURL(),
 	}
 }

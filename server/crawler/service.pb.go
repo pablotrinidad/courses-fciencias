@@ -27,7 +27,7 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 // Major represents a Bachelor's degree offered at the Faculty, f.e: Computer Science, Physics, etc.
 type Major struct {
 	// Unique identifier used across the official website.
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// Major's official name.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// Official website URL.
@@ -62,11 +62,11 @@ func (m *Major) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Major proto.InternalMessageInfo
 
-func (m *Major) GetId() string {
+func (m *Major) GetId() uint32 {
 	if m != nil {
 		return m.Id
 	}
-	return ""
+	return 0
 }
 
 func (m *Major) GetName() string {
@@ -87,12 +87,12 @@ func (m *Major) GetUrl() string {
 // Usually defined by the year the program was made official, f.e: Computer Science 2013.
 type Program struct {
 	// Unique identifier used across the official website.
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Program's major unique identifier
-	Major string `protobuf:"bytes,2,opt,name=major,proto3" json:"major,omitempty"`
-	// Program's official name
+	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Program's major unique identifier.
+	Major uint32 `protobuf:"varint,2,opt,name=major,proto3" json:"major,omitempty"`
+	// Program's official name.
 	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	// The year officially used to identify the program
+	// The year officially used to identify the program.
 	Year uint32 `protobuf:"varint,4,opt,name=year,proto3" json:"year,omitempty"`
 	// Official website URL.
 	Url                  string   `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
@@ -126,18 +126,18 @@ func (m *Program) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Program proto.InternalMessageInfo
 
-func (m *Program) GetId() string {
+func (m *Program) GetId() uint32 {
 	if m != nil {
 		return m.Id
 	}
-	return ""
+	return 0
 }
 
-func (m *Program) GetMajor() string {
+func (m *Program) GetMajor() uint32 {
 	if m != nil {
 		return m.Major
 	}
-	return ""
+	return 0
 }
 
 func (m *Program) GetName() string {
@@ -161,6 +161,101 @@ func (m *Program) GetUrl() string {
 	return ""
 }
 
+// Course represents a course offered in at the Faculty, f.e: Automata theory.
+type Course struct {
+	// Unique identifier used across the official website.
+	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Course's official name.
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	// Semester where the course is taught within a major's program.
+	Semester uint32 `protobuf:"varint,3,opt,name=semester,proto3" json:"semester,omitempty"`
+	// Determine whether a course is mandatory or elective within a major's program.
+	Mandatory bool `protobuf:"varint,4,opt,name=mandatory,proto3" json:"mandatory,omitempty"`
+	// Credits the major's program attributed to the course.
+	Credits uint32 `protobuf:"varint,5,opt,name=credits,proto3" json:"credits,omitempty"`
+	// The course's syllabus URL.
+	Syllabus string `protobuf:"bytes,6,opt,name=syllabus,proto3" json:"syllabus,omitempty"`
+	// Official website URL.
+	Url                  string   `protobuf:"bytes,7,opt,name=url,proto3" json:"url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Course) Reset()         { *m = Course{} }
+func (m *Course) String() string { return proto.CompactTextString(m) }
+func (*Course) ProtoMessage()    {}
+func (*Course) Descriptor() ([]byte, []int) {
+	return fileDescriptor_013f22f6f757e72a, []int{2}
+}
+
+func (m *Course) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Course.Unmarshal(m, b)
+}
+func (m *Course) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Course.Marshal(b, m, deterministic)
+}
+func (m *Course) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Course.Merge(m, src)
+}
+func (m *Course) XXX_Size() int {
+	return xxx_messageInfo_Course.Size(m)
+}
+func (m *Course) XXX_DiscardUnknown() {
+	xxx_messageInfo_Course.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Course proto.InternalMessageInfo
+
+func (m *Course) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Course) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *Course) GetSemester() uint32 {
+	if m != nil {
+		return m.Semester
+	}
+	return 0
+}
+
+func (m *Course) GetMandatory() bool {
+	if m != nil {
+		return m.Mandatory
+	}
+	return false
+}
+
+func (m *Course) GetCredits() uint32 {
+	if m != nil {
+		return m.Credits
+	}
+	return 0
+}
+
+func (m *Course) GetSyllabus() string {
+	if m != nil {
+		return m.Syllabus
+	}
+	return ""
+}
+
+func (m *Course) GetUrl() string {
+	if m != nil {
+		return m.Url
+	}
+	return ""
+}
+
 // ListMajorsRequest is the request sent to FCCrawler.ListMajors.
 type ListMajorsRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -172,7 +267,7 @@ func (m *ListMajorsRequest) Reset()         { *m = ListMajorsRequest{} }
 func (m *ListMajorsRequest) String() string { return proto.CompactTextString(m) }
 func (*ListMajorsRequest) ProtoMessage()    {}
 func (*ListMajorsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_013f22f6f757e72a, []int{2}
+	return fileDescriptor_013f22f6f757e72a, []int{3}
 }
 
 func (m *ListMajorsRequest) XXX_Unmarshal(b []byte) error {
@@ -193,7 +288,7 @@ func (m *ListMajorsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ListMajorsRequest proto.InternalMessageInfo
 
-// ListMajorsResponse is the response returned by FCCrawler.ListMajors after a successful request.
+// ListMajorsResponse is the response returned by FCCrawler.ListMajors.
 type ListMajorsResponse struct {
 	Majors []*Major `protobuf:"bytes,1,rep,name=majors,proto3" json:"majors,omitempty"`
 	// The total amount of majors offered by the faculty.
@@ -207,7 +302,7 @@ func (m *ListMajorsResponse) Reset()         { *m = ListMajorsResponse{} }
 func (m *ListMajorsResponse) String() string { return proto.CompactTextString(m) }
 func (*ListMajorsResponse) ProtoMessage()    {}
 func (*ListMajorsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_013f22f6f757e72a, []int{3}
+	return fileDescriptor_013f22f6f757e72a, []int{4}
 }
 
 func (m *ListMajorsResponse) XXX_Unmarshal(b []byte) error {
@@ -253,7 +348,7 @@ func (m *ListProgramsRequest) Reset()         { *m = ListProgramsRequest{} }
 func (m *ListProgramsRequest) String() string { return proto.CompactTextString(m) }
 func (*ListProgramsRequest) ProtoMessage()    {}
 func (*ListProgramsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_013f22f6f757e72a, []int{4}
+	return fileDescriptor_013f22f6f757e72a, []int{5}
 }
 
 func (m *ListProgramsRequest) XXX_Unmarshal(b []byte) error {
@@ -274,7 +369,7 @@ func (m *ListProgramsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ListProgramsRequest proto.InternalMessageInfo
 
-// ListProgramsResponse is the response returned by FCCrawler.ListMajors after a successful request.
+// ListProgramsResponse is the response returned by FCCrawler.ListMajors.
 type ListProgramsResponse struct {
 	Majors []*ListProgramsResponse_MajorBreakdown `protobuf:"bytes,1,rep,name=majors,proto3" json:"majors,omitempty"`
 	// The total amount of programs offered by the faculty.
@@ -288,7 +383,7 @@ func (m *ListProgramsResponse) Reset()         { *m = ListProgramsResponse{} }
 func (m *ListProgramsResponse) String() string { return proto.CompactTextString(m) }
 func (*ListProgramsResponse) ProtoMessage()    {}
 func (*ListProgramsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_013f22f6f757e72a, []int{5}
+	return fileDescriptor_013f22f6f757e72a, []int{6}
 }
 
 func (m *ListProgramsResponse) XXX_Unmarshal(b []byte) error {
@@ -335,7 +430,7 @@ func (m *ListProgramsResponse_MajorBreakdown) Reset()         { *m = ListProgram
 func (m *ListProgramsResponse_MajorBreakdown) String() string { return proto.CompactTextString(m) }
 func (*ListProgramsResponse_MajorBreakdown) ProtoMessage()    {}
 func (*ListProgramsResponse_MajorBreakdown) Descriptor() ([]byte, []int) {
-	return fileDescriptor_013f22f6f757e72a, []int{5, 0}
+	return fileDescriptor_013f22f6f757e72a, []int{6, 0}
 }
 
 func (m *ListProgramsResponse_MajorBreakdown) XXX_Unmarshal(b []byte) error {
@@ -370,14 +465,122 @@ func (m *ListProgramsResponse_MajorBreakdown) GetPrograms() []*Program {
 	return nil
 }
 
+// ListProgramCoursesRequest is the request sent to FCC.ListProgramCourses
+type ListProgramCoursesRequest struct {
+	Major                uint32   `protobuf:"varint,1,opt,name=major,proto3" json:"major,omitempty"`
+	Program              uint32   `protobuf:"varint,2,opt,name=program,proto3" json:"program,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListProgramCoursesRequest) Reset()         { *m = ListProgramCoursesRequest{} }
+func (m *ListProgramCoursesRequest) String() string { return proto.CompactTextString(m) }
+func (*ListProgramCoursesRequest) ProtoMessage()    {}
+func (*ListProgramCoursesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_013f22f6f757e72a, []int{7}
+}
+
+func (m *ListProgramCoursesRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListProgramCoursesRequest.Unmarshal(m, b)
+}
+func (m *ListProgramCoursesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListProgramCoursesRequest.Marshal(b, m, deterministic)
+}
+func (m *ListProgramCoursesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListProgramCoursesRequest.Merge(m, src)
+}
+func (m *ListProgramCoursesRequest) XXX_Size() int {
+	return xxx_messageInfo_ListProgramCoursesRequest.Size(m)
+}
+func (m *ListProgramCoursesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListProgramCoursesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListProgramCoursesRequest proto.InternalMessageInfo
+
+func (m *ListProgramCoursesRequest) GetMajor() uint32 {
+	if m != nil {
+		return m.Major
+	}
+	return 0
+}
+
+func (m *ListProgramCoursesRequest) GetProgram() uint32 {
+	if m != nil {
+		return m.Program
+	}
+	return 0
+}
+
+// ListProgramCoursesResponse is the response returned by FCC.ListProgramCourses
+type ListProgramCoursesResponse struct {
+	Program *Program  `protobuf:"bytes,1,opt,name=program,proto3" json:"program,omitempty"`
+	Courses []*Course `protobuf:"bytes,2,rep,name=courses,proto3" json:"courses,omitempty"`
+	// The total amount of courses offered in the major's program.
+	Count                uint32   `protobuf:"varint,3,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListProgramCoursesResponse) Reset()         { *m = ListProgramCoursesResponse{} }
+func (m *ListProgramCoursesResponse) String() string { return proto.CompactTextString(m) }
+func (*ListProgramCoursesResponse) ProtoMessage()    {}
+func (*ListProgramCoursesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_013f22f6f757e72a, []int{8}
+}
+
+func (m *ListProgramCoursesResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListProgramCoursesResponse.Unmarshal(m, b)
+}
+func (m *ListProgramCoursesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListProgramCoursesResponse.Marshal(b, m, deterministic)
+}
+func (m *ListProgramCoursesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListProgramCoursesResponse.Merge(m, src)
+}
+func (m *ListProgramCoursesResponse) XXX_Size() int {
+	return xxx_messageInfo_ListProgramCoursesResponse.Size(m)
+}
+func (m *ListProgramCoursesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListProgramCoursesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListProgramCoursesResponse proto.InternalMessageInfo
+
+func (m *ListProgramCoursesResponse) GetProgram() *Program {
+	if m != nil {
+		return m.Program
+	}
+	return nil
+}
+
+func (m *ListProgramCoursesResponse) GetCourses() []*Course {
+	if m != nil {
+		return m.Courses
+	}
+	return nil
+}
+
+func (m *ListProgramCoursesResponse) GetCount() uint32 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*Major)(nil), "crawler.Major")
 	proto.RegisterType((*Program)(nil), "crawler.Program")
+	proto.RegisterType((*Course)(nil), "crawler.Course")
 	proto.RegisterType((*ListMajorsRequest)(nil), "crawler.ListMajorsRequest")
 	proto.RegisterType((*ListMajorsResponse)(nil), "crawler.ListMajorsResponse")
 	proto.RegisterType((*ListProgramsRequest)(nil), "crawler.ListProgramsRequest")
 	proto.RegisterType((*ListProgramsResponse)(nil), "crawler.ListProgramsResponse")
 	proto.RegisterType((*ListProgramsResponse_MajorBreakdown)(nil), "crawler.ListProgramsResponse.MajorBreakdown")
+	proto.RegisterType((*ListProgramCoursesRequest)(nil), "crawler.ListProgramCoursesRequest")
+	proto.RegisterType((*ListProgramCoursesResponse)(nil), "crawler.ListProgramCoursesResponse")
 }
 
 func init() {
@@ -385,31 +588,40 @@ func init() {
 }
 
 var fileDescriptor_013f22f6f757e72a = []byte{
-	// 370 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x52, 0x5d, 0x4f, 0xf2, 0x30,
-	0x14, 0xce, 0x36, 0x3e, 0x5e, 0xce, 0x2b, 0x04, 0x0b, 0x24, 0x0b, 0x6a, 0x42, 0x16, 0x63, 0xb8,
-	0x20, 0x5b, 0x84, 0x6b, 0x6f, 0x40, 0xbd, 0x51, 0x13, 0xd3, 0x4b, 0xef, 0xca, 0x56, 0xb1, 0xca,
-	0xd6, 0xd9, 0x6e, 0x12, 0x7f, 0x8d, 0x7f, 0xcb, 0x9f, 0x63, 0xd6, 0x95, 0xc1, 0x04, 0xb9, 0x3b,
-	0x3d, 0xe7, 0xc9, 0xf3, 0x95, 0x42, 0xcf, 0x17, 0x64, 0xb5, 0xa4, 0xc2, 0x93, 0x54, 0x7c, 0x30,
-	0x9f, 0xba, 0xb1, 0xe0, 0x09, 0x47, 0x75, 0xbd, 0x76, 0xae, 0xa0, 0xfa, 0x40, 0x5e, 0xb9, 0x40,
-	0x2d, 0x30, 0x59, 0x60, 0x1b, 0x03, 0x63, 0xd8, 0xc0, 0x26, 0x0b, 0x10, 0x82, 0x4a, 0x44, 0x42,
-	0x6a, 0x9b, 0x6a, 0xa3, 0x66, 0xd4, 0x06, 0x2b, 0x15, 0x4b, 0xdb, 0x52, 0xab, 0x6c, 0x74, 0x18,
-	0xd4, 0x1f, 0x05, 0x5f, 0x08, 0x12, 0xee, 0x10, 0x74, 0xa1, 0x1a, 0x66, 0xcc, 0x9a, 0x21, 0x7f,
-	0x14, 0xb4, 0xd6, 0x16, 0x2d, 0x82, 0xca, 0x27, 0x25, 0xc2, 0xae, 0x0c, 0x8c, 0x61, 0x13, 0xab,
-	0x79, 0x2d, 0x55, 0xdd, 0x48, 0x75, 0xe0, 0xf8, 0x9e, 0xc9, 0x44, 0xb9, 0x95, 0x98, 0xbe, 0xa7,
-	0x54, 0x26, 0x0e, 0x06, 0xb4, 0xbd, 0x94, 0x31, 0x8f, 0x24, 0x45, 0x17, 0x50, 0x53, 0x6a, 0xd2,
-	0x36, 0x06, 0xd6, 0xf0, 0xff, 0xb8, 0xe5, 0xea, 0xb8, 0xae, 0x02, 0x62, 0x7d, 0xcd, 0x2c, 0xfa,
-	0x3c, 0x8d, 0x12, 0x65, 0xb1, 0x89, 0xf3, 0x87, 0xd3, 0x83, 0x4e, 0xc6, 0xa9, 0x73, 0x15, 0x52,
-	0xdf, 0x06, 0x74, 0xcb, 0x7b, 0xad, 0x76, 0xfd, 0x4b, 0x6d, 0x54, 0xa8, 0xed, 0x83, 0xe7, 0x16,
-	0xa6, 0x82, 0x92, 0xb7, 0x80, 0xaf, 0xa2, 0xc3, 0x5e, 0xfa, 0x01, 0xb4, 0xca, 0x78, 0x74, 0xbe,
-	0xae, 0x35, 0x6b, 0x7a, 0x37, 0x9a, 0xae, 0x79, 0x04, 0xff, 0x62, 0x2d, 0x6c, 0x9b, 0xca, 0x55,
-	0xbb, 0x00, 0x6a, 0x47, 0xb8, 0x40, 0x8c, 0xbf, 0x0c, 0x68, 0xdc, 0xce, 0x66, 0xf9, 0x1d, 0xdd,
-	0x00, 0x6c, 0x3a, 0x45, 0xfd, 0x52, 0x9a, 0x52, 0xfb, 0xfd, 0x93, 0xbd, 0x37, 0x5d, 0xcb, 0x1d,
-	0x1c, 0x6d, 0xe7, 0x47, 0xa7, 0x7f, 0xd4, 0x92, 0x53, 0x9d, 0x1d, 0x2c, 0x6d, 0x3a, 0x79, 0xba,
-	0x5c, 0xb0, 0xe4, 0x25, 0x9d, 0xbb, 0x3e, 0x0f, 0xbd, 0x98, 0xcc, 0x97, 0x3c, 0x11, 0x2c, 0x62,
-	0x01, 0x09, 0xbc, 0x67, 0x9f, 0xd1, 0xc8, 0x67, 0x44, 0xaa, 0x3f, 0x4e, 0x85, 0xa7, 0x99, 0xe6,
-	0x35, 0xf5, 0xd7, 0x27, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x31, 0x99, 0x8a, 0x4b, 0x04, 0x03,
-	0x00, 0x00,
+	// 525 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0x96, 0xe3, 0x24, 0x4e, 0x06, 0x12, 0xca, 0xb6, 0x95, 0x8c, 0x29, 0x52, 0x64, 0x10, 0x0a,
+	0xa8, 0x4a, 0x44, 0x7b, 0xe6, 0xd2, 0x00, 0x97, 0x82, 0x84, 0xf6, 0x88, 0xc4, 0x61, 0x63, 0x2f,
+	0x65, 0xc1, 0xf6, 0x86, 0xdd, 0x35, 0x55, 0x1e, 0x81, 0x97, 0xe1, 0x79, 0x78, 0x1a, 0x84, 0xbc,
+	0x3f, 0xfe, 0x21, 0x21, 0xe2, 0xe6, 0x99, 0x9d, 0xf9, 0xbe, 0x6f, 0x66, 0x3e, 0x19, 0x4e, 0x13,
+	0x41, 0x6e, 0x33, 0x2a, 0x96, 0x92, 0x8a, 0xef, 0x2c, 0xa1, 0x8b, 0x8d, 0xe0, 0x8a, 0xa3, 0xc0,
+	0xa6, 0xe3, 0x97, 0x30, 0x78, 0x47, 0xbe, 0x70, 0x81, 0xa6, 0xd0, 0x63, 0x69, 0xe8, 0xcd, 0xbc,
+	0xf9, 0x04, 0xf7, 0x58, 0x8a, 0x10, 0xf4, 0x0b, 0x92, 0xd3, 0xb0, 0x37, 0xf3, 0xe6, 0x63, 0xac,
+	0xbf, 0xd1, 0x11, 0xf8, 0xa5, 0xc8, 0x42, 0x5f, 0xa7, 0xaa, 0xcf, 0x98, 0x41, 0xf0, 0x5e, 0xf0,
+	0x1b, 0x41, 0xf2, 0x1d, 0x80, 0x13, 0x18, 0xe4, 0x15, 0xb2, 0x46, 0x98, 0x60, 0x13, 0xd4, 0xb0,
+	0x7e, 0x0b, 0x16, 0x41, 0x7f, 0x4b, 0x89, 0x08, 0xfb, 0xba, 0x50, 0x7f, 0x3b, 0xaa, 0x41, 0x43,
+	0xf5, 0xd3, 0x83, 0xe1, 0x8a, 0x97, 0x42, 0xd2, 0xff, 0xd2, 0x1a, 0xc1, 0x48, 0xd2, 0x9c, 0x4a,
+	0x45, 0x85, 0x26, 0x9b, 0xe0, 0x3a, 0x46, 0x67, 0x30, 0xce, 0x49, 0x91, 0x12, 0xc5, 0xc5, 0x56,
+	0xb3, 0x8e, 0x70, 0x93, 0x40, 0x21, 0x04, 0x89, 0xa0, 0x29, 0x53, 0x52, 0xd3, 0x4f, 0xb0, 0x0b,
+	0x35, 0xe6, 0x36, 0xcb, 0xc8, 0xba, 0x94, 0xe1, 0x50, 0x73, 0xd5, 0xb1, 0x13, 0x1c, 0x34, 0x82,
+	0x8f, 0xe1, 0xfe, 0x5b, 0x26, 0x95, 0x5e, 0xaf, 0xc4, 0xf4, 0x5b, 0x49, 0xa5, 0x8a, 0x31, 0xa0,
+	0x76, 0x52, 0x6e, 0x78, 0x21, 0x29, 0x7a, 0x0a, 0x43, 0xbd, 0x1e, 0x19, 0x7a, 0x33, 0x7f, 0x7e,
+	0xe7, 0x62, 0xba, 0xb0, 0xf7, 0x59, 0xe8, 0x42, 0x6c, 0x5f, 0xab, 0x9d, 0x26, 0xbc, 0x2c, 0x94,
+	0xdb, 0xa9, 0x0e, 0xe2, 0x53, 0x38, 0xae, 0x30, 0xed, 0x21, 0x6a, 0xaa, 0x5f, 0x1e, 0x9c, 0x74,
+	0xf3, 0x96, 0xed, 0xd5, 0x5f, 0x6c, 0xe7, 0x35, 0xdb, 0xbe, 0x72, 0x23, 0xe1, 0x4a, 0x50, 0xf2,
+	0x35, 0xe5, 0xb7, 0xc5, 0x61, 0x2d, 0x51, 0x0a, 0xd3, 0x6e, 0x3d, 0x7a, 0xe2, 0x7c, 0x50, 0xdd,
+	0x6b, 0x77, 0x34, 0xeb, 0x8b, 0x73, 0x18, 0x6d, 0x2c, 0x71, 0xd8, 0xd3, 0xaa, 0x8e, 0xea, 0x42,
+	0xab, 0x08, 0xd7, 0x15, 0xf1, 0x35, 0x3c, 0x68, 0x49, 0x35, 0xae, 0x70, 0x73, 0x37, 0xc6, 0xf3,
+	0xda, 0xc6, 0x0b, 0x21, 0xb0, 0xed, 0x56, 0xb0, 0x0b, 0xe3, 0x1f, 0x1e, 0x44, 0xfb, 0xd0, 0xec,
+	0xb6, 0x9e, 0x37, 0x8d, 0x66, 0x82, 0x5d, 0x61, 0xae, 0x00, 0x3d, 0x83, 0x20, 0x31, 0xed, 0x76,
+	0x88, 0x7b, 0x75, 0xad, 0x81, 0xc5, 0xee, 0xbd, 0x59, 0x9f, 0xdf, 0x5a, 0xdf, 0xc5, 0x6f, 0x0f,
+	0xc6, 0x6f, 0x56, 0x2b, 0xd3, 0x83, 0x5e, 0x03, 0x34, 0x66, 0x41, 0x51, 0xe7, 0x4c, 0x1d, 0x5b,
+	0x45, 0x0f, 0xf7, 0xbe, 0xd9, 0x09, 0xae, 0xe1, 0x6e, 0xfb, 0xb0, 0xe8, 0xec, 0x1f, 0xf7, 0x36,
+	0x50, 0x8f, 0x0e, 0xba, 0x01, 0x7d, 0x34, 0x06, 0xee, 0x2e, 0x0b, 0xc5, 0xfb, 0x9a, 0xba, 0x77,
+	0x89, 0x1e, 0x1f, 0xac, 0x31, 0xf0, 0x57, 0x97, 0x1f, 0x5e, 0xdc, 0x30, 0xf5, 0xb9, 0x5c, 0x2f,
+	0x12, 0x9e, 0x2f, 0x37, 0x64, 0x9d, 0x71, 0x25, 0x58, 0xc1, 0x52, 0x92, 0x2e, 0x3f, 0x25, 0x8c,
+	0x16, 0x09, 0x23, 0x52, 0xff, 0xcc, 0xa8, 0x58, 0x5a, 0xbc, 0xf5, 0x50, 0xff, 0xd4, 0x2e, 0xff,
+	0x04, 0x00, 0x00, 0xff, 0xff, 0x60, 0xbd, 0x63, 0x7a, 0xed, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -428,6 +640,8 @@ type FCCrawlerClient interface {
 	ListMajors(ctx context.Context, in *ListMajorsRequest, opts ...grpc.CallOption) (*ListMajorsResponse, error)
 	// ListPrograms lists the different offerings every major has.
 	ListPrograms(ctx context.Context, in *ListProgramsRequest, opts ...grpc.CallOption) (*ListProgramsResponse, error)
+	// ListProgramCourses lists all courses offered in a program.
+	ListProgramCourses(ctx context.Context, in *ListProgramCoursesRequest, opts ...grpc.CallOption) (*ListProgramCoursesResponse, error)
 }
 
 type fCCrawlerClient struct {
@@ -456,12 +670,23 @@ func (c *fCCrawlerClient) ListPrograms(ctx context.Context, in *ListProgramsRequ
 	return out, nil
 }
 
+func (c *fCCrawlerClient) ListProgramCourses(ctx context.Context, in *ListProgramCoursesRequest, opts ...grpc.CallOption) (*ListProgramCoursesResponse, error) {
+	out := new(ListProgramCoursesResponse)
+	err := c.cc.Invoke(ctx, "/crawler.FCCrawler/ListProgramCourses", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FCCrawlerServer is the server API for FCCrawler service.
 type FCCrawlerServer interface {
 	// ListMajors returns all majors offered in the faculty.
 	ListMajors(context.Context, *ListMajorsRequest) (*ListMajorsResponse, error)
 	// ListPrograms lists the different offerings every major has.
 	ListPrograms(context.Context, *ListProgramsRequest) (*ListProgramsResponse, error)
+	// ListProgramCourses lists all courses offered in a program.
+	ListProgramCourses(context.Context, *ListProgramCoursesRequest) (*ListProgramCoursesResponse, error)
 }
 
 // UnimplementedFCCrawlerServer can be embedded to have forward compatible implementations.
@@ -473,6 +698,9 @@ func (*UnimplementedFCCrawlerServer) ListMajors(ctx context.Context, req *ListMa
 }
 func (*UnimplementedFCCrawlerServer) ListPrograms(ctx context.Context, req *ListProgramsRequest) (*ListProgramsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPrograms not implemented")
+}
+func (*UnimplementedFCCrawlerServer) ListProgramCourses(ctx context.Context, req *ListProgramCoursesRequest) (*ListProgramCoursesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProgramCourses not implemented")
 }
 
 func RegisterFCCrawlerServer(s *grpc.Server, srv FCCrawlerServer) {
@@ -515,6 +743,24 @@ func _FCCrawler_ListPrograms_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FCCrawler_ListProgramCourses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProgramCoursesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FCCrawlerServer).ListProgramCourses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/crawler.FCCrawler/ListProgramCourses",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FCCrawlerServer).ListProgramCourses(ctx, req.(*ListProgramCoursesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _FCCrawler_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "crawler.FCCrawler",
 	HandlerType: (*FCCrawlerServer)(nil),
@@ -526,6 +772,10 @@ var _FCCrawler_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPrograms",
 			Handler:    _FCCrawler_ListPrograms_Handler,
+		},
+		{
+			MethodName: "ListProgramCourses",
+			Handler:    _FCCrawler_ListProgramCourses_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

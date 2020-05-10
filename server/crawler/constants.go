@@ -9,6 +9,7 @@ const (
 	baseURL     = "http://www.fciencias.unam.mx"
 	majorsURL   = "licenciatura/resumen"
 	programsURL = "licenciatura/mapa"
+	coursesURL  = "licenciatura/asignaturas"
 
 	// Crawler parameters
 	httpUserAgent  = "CoursesCrawlerBot v.1.0 https://github.com/pablotrinidad/courses-fciencias | Download courses catalog"

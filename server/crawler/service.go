@@ -65,6 +65,33 @@ func (*FCCrawlerServiceImpl) ListPrograms(context.Context, *ListProgramsRequest)
 	return resp, nil
 }
 
+// ListProgramCourses return all courses offered in a major's program.
+func (*FCCrawlerServiceImpl) ListProgramCourses(ctx context.Context, req *ListProgramCoursesRequest) (*ListProgramCoursesResponse, error) {
+	var programFound bool
+	for _, p := range programs[int(req.GetMajor())] {
+		programFound = programFound || p == int(req.GetProgram())
+	}
+	if !programFound {
+		return nil, status.Errorf(codes.InvalidArgument, "got invalid major-program combination major:%d program:%d", req.GetMajor(), req.GetProgram())
+	}
+
+	p := &program{externalID: int(req.GetProgram()), major: int(req.GetMajor())}
+	courses, err := fetchProgramCourses(p)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "%v", err)
+	}
+
+	resp := &ListProgramCoursesResponse{}
+	resp.Program = p.toProto()
+	resp.Count = uint32(len(courses))
+	resp.Courses = make([]*Course, len(courses))
+	for i := range courses {
+		resp.Courses[i] = courses[i].toProto()
+	}
+
+	return resp, nil
+}
+
 // fetchMajorsConcurrently visit majors' website and retrieves name.
 func fetchMajorsConcurrently() ([]*major, error) {
 	type fetchMajorResult struct {
