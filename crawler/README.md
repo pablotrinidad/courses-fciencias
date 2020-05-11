@@ -17,6 +17,8 @@ The [**FCCrawler**](proto/service.proto) service handles the content retrieval o
  
  Read more [here](Makefile).
  
+ A gRPC web client like [gRPCox](https://github.com/gusaul/grpcox) can be used to call the service.
+ 
  ## Modules structure
  
  * `proto` contains the gRPC service definition using [**Protocol Buffers**](https://developers.google.com/protocol-buffers), and the corresponding generated files.  
