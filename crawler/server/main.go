@@ -2,25 +2,19 @@ package main
 
 import (
 	"fmt"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
 	"os"
-	"strconv"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 
 	spb "crawler/proto"
 	service "crawler/service"
 )
 
-func main() {
-	port, err := strconv.Atoi(getenv("SERVICE_PORT", "8000"))
-	if err != nil {
-		log.Fatalf("got invalid tcp port %s", getenv("SERVICE_PORT", "8000"))
-		os.Exit(1)
-	}
+const port uint8 = 8000
 
+func main() {
 	s := grpc.NewServer()
 	reflection.Register(s)
 	spb.RegisterFCCrawlerServer(s, service.NewFCCrawlerService())
@@ -36,11 +30,4 @@ func main() {
 		log.Fatalf("Failed to serve: %v", err)
 		os.Exit(1)
 	}
-}
-
-func getenv(key, fallback string) string {
-	if v, ok := os.LookupEnv(key); ok {
-		return v
-	}
-	return fallback
 }

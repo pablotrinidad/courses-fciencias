@@ -9,3 +9,16 @@ The [**FCCrawler**](proto/service.proto) service handles the content retrieval o
 **NOTE:** Please use this service responsibly since the HTTP calls to the official website are
  performed concurrently and might cause unwanted traffic loads. I'm not responsible for the
   usage of this package, this is put together as a learning exercise on microservices.
+  
+ ## How to use
+ * `make start` to start server locally
+ * `make build` to build source
+ * `make build-docker-image` to build production docker image.
+ 
+ Read more [here](Makefile).
+ 
+ ## Modules structure
+ 
+ * `proto` contains the gRPC service definition using [**Protocol Buffers**](https://developers.google.com/protocol-buffers), and the corresponding generated files.  
+ * `server` contains the TCP server hosting the gRPC service implementation
+ * `service` contains an implementation of the [**FCCrawler**](proto/service.proto) service.   
