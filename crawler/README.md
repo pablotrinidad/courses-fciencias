@@ -19,6 +19,9 @@ The [**FCCrawler**](proto/service.proto) service handles the content retrieval o
  
  A gRPC web client like [gRPCox](https://github.com/gusaul/grpcox) can be used to call the service.
  
+ Use environment variables `GRPC_GO_LOG_VERBOSITY_LEVEL=99 GRPC_GO_LOG_SEVERITY_LEVEL=info` to
+  activate gRPC logger.
+ 
  ## Modules structure
  
  * `proto` contains the gRPC service definition using [**Protocol Buffers**](https://developers.google.com/protocol-buffers), and the corresponding generated files.  

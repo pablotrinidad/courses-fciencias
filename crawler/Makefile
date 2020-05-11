@@ -12,7 +12,7 @@ build: clean
 
 .PHONY: start
 start: clean build
-	./$(BINARY_LOCATION)/$(APP_NAME)
+	GRPC_GO_LOG_VERBOSITY_LEVEL=99 GRPC_GO_LOG_SEVERITY_LEVEL=info ./$(BINARY_LOCATION)/$(APP_NAME)
 
 .PHONY: clean
 clean:
