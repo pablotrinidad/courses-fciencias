@@ -7,25 +7,28 @@ import (
 
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+
+	spb "crawler/proto"
 )
 
-// FCCrawlerServiceImpl is an implementation of FCCrawler gRPC service.
-type FCCrawlerServiceImpl struct{}
+// FCCrawlerService is an implementation of FCCrawler gRPC service.
+type FCCrawlerService struct{}
 
-// NewFCCrawlerServiceImpl returns a pointer to the service implementation.
-func NewFCCrawlerServiceImpl() *FCCrawlerServiceImpl {
-	return &FCCrawlerServiceImpl{}
+// FCCrawlerService returns a pointer to the service implementation.
+func NewFCCrawlerService() *FCCrawlerService {
+	return &FCCrawlerService{}
 }
 
 // ListMajors returns all available majors. It will fetch majors from website even though data is
 // known and unlikely to change.
-func (*FCCrawlerServiceImpl) ListMajors(context.Context, *ListMajorsRequest) (*ListMajorsResponse, error) {
+func (*FCCrawlerService) ListMajors(context.Context,
+	*spb.ListMajorsRequest) (*spb.ListMajorsResponse, error) {
 	majors, err := fetchMajorsConcurrently()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%v", err)
 	}
-	resp := &ListMajorsResponse{Count: uint32(len(majors))}
-	resp.Majors = make([]*Major, len(majors))
+	resp := &spb.ListMajorsResponse{Count: uint32(len(majors))}
+	resp.Majors = make([]*spb.Major, len(majors))
 	for i, m := range majors {
 		resp.Majors[i] = m.toProto()
 	}
@@ -35,7 +38,8 @@ func (*FCCrawlerServiceImpl) ListMajors(context.Context, *ListMajorsRequest) (*L
 // TODO: Make method fetch available programs (must filter out those overlapping and without info)
 // ListPrograms returns all available programs grouped by major. Data returned by this function is
 // hardcoded since there is nothing more to fetch.
-func (*FCCrawlerServiceImpl) ListPrograms(context.Context, *ListProgramsRequest) (*ListProgramsResponse, error) {
+func (*FCCrawlerService) ListPrograms(context.Context,
+	*spb.ListProgramsRequest) (*spb.ListProgramsResponse, error) {
 	majors, err := fetchMajorsConcurrently()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%v", err)
@@ -47,12 +51,12 @@ func (*FCCrawlerServiceImpl) ListPrograms(context.Context, *ListProgramsRequest)
 		return nil, status.Errorf(codes.Internal, "%v", err)
 	}
 
-	resp := &ListProgramsResponse{}
-	resp.Majors = make([]*ListProgramsResponse_MajorBreakdown, len(majors))
+	resp := &spb.ListProgramsResponse{}
+	resp.Majors = make([]*spb.ListProgramsResponse_MajorBreakdown, len(majors))
 	var programsCount uint32
 	for i, _ := range majors {
 		m := majors[i]
-		mb := &ListProgramsResponse_MajorBreakdown{Major: m.toProto()}
+		mb := &spb.ListProgramsResponse_MajorBreakdown{Major: m.toProto()}
 		mPrograms := programs[m.externalID]
 		for j, _ := range mPrograms {
 			p := mPrograms[j]
@@ -66,7 +70,7 @@ func (*FCCrawlerServiceImpl) ListPrograms(context.Context, *ListProgramsRequest)
 }
 
 // ListProgramCourses return all courses offered in a major's program.
-func (*FCCrawlerServiceImpl) ListProgramCourses(ctx context.Context, req *ListProgramCoursesRequest) (*ListProgramCoursesResponse, error) {
+func (*FCCrawlerService) ListProgramCourses(ctx context.Context, req *spb.ListProgramCoursesRequest) (*spb.ListProgramCoursesResponse, error) {
 	var programFound bool
 	for _, p := range programs[int(req.GetMajor())] {
 		programFound = programFound || p == int(req.GetProgram())
@@ -81,10 +85,10 @@ func (*FCCrawlerServiceImpl) ListProgramCourses(ctx context.Context, req *ListPr
 		return nil, status.Errorf(codes.Internal, "%v", err)
 	}
 
-	resp := &ListProgramCoursesResponse{}
+	resp := &spb.ListProgramCoursesResponse{}
 	resp.Program = p.toProto()
 	resp.Count = uint32(len(courses))
-	resp.Courses = make([]*Course, len(courses))
+	resp.Courses = make([]*spb.Course, len(courses))
 	for i := range courses {
 		resp.Courses[i] = courses[i].toProto()
 	}

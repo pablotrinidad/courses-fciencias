@@ -1,9 +1,20 @@
-FROM golang:1.14 as base
-ENV APP_PORT=8080
+############### Builder stage
+FROM golang:1.14-alpine as builder
+
+# Move source
 WORKDIR /go/src/crawler
 COPY . .
+WORKDIR /go/src/crawler/server
 
-FROM base as dev
-RUN go get -u github.com/cosmtrek/air
-ENTRYPOINT "air"
+# Fetch dependencies
+RUN go mod download
+RUN go mod verify
 
+# Build binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/service
+RUN ls /go/bin
+
+############### Production stage
+FROM scratch
+COPY --from=builder /go/bin/service /go/bin/service
+ENTRYPOINT ["/go/bin/service"]

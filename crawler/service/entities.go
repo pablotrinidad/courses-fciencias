@@ -1,6 +1,7 @@
 package service
 
 import (
+	spb "crawler/proto"
 	"fmt"
 )
 
@@ -15,8 +16,8 @@ func (m *major) getURL() string {
 }
 
 // toProto returns the protobuf representation of the major
-func (m *major) toProto() *Major {
-	return &Major{
+func (m *major) toProto() *spb.Major {
+	return &spb.Major{
 		Id:   uint32(m.externalID),
 		Name: m.name,
 		Url:  m.getURL(),
@@ -36,8 +37,8 @@ func (p *program) getURL() string {
 }
 
 // toProto returns the protobuf representation of the program
-func (p *program) toProto() *Program {
-	return &Program{
+func (p *program) toProto() *spb.Program {
+	return &spb.Program{
 		Id:   uint32(p.externalID),
 		Name: p.name,
 		Year: uint32(p.year),
@@ -61,8 +62,8 @@ func (c *course) getURL() string {
 }
 
 // toProto returns the protobuf representation of the course
-func (c *course) toProto() *Course {
-	return &Course{
+func (c *course) toProto() *spb.Course {
+	return &spb.Course{
 		Id:        uint32(c.externalID),
 		Name:      c.name,
 		Semester:  uint32(c.semester),
